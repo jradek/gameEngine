@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
 import renderEngine.Loader;
-import textures.ModelTexture;
 
 public class Terrain {
     private static final float SIZE = 800;

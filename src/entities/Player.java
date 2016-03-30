@@ -1,7 +1,6 @@
 package entities;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;

@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL30;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Entity;

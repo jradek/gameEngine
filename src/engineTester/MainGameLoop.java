@@ -20,8 +20,6 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.EntityRenderer;
-import shaders.StaticShader;
 import terrains.Terrain;
 import terrains.TerrainTexture;
 import terrains.TerrainTexturePack;
