@@ -181,7 +181,7 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
-        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+        Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
         
         RawModel rawBunnyModel = OBJLoader.loadObjModel("bunny", loader);
         TexturedModel bunnyModel = new TexturedModel(rawBunnyModel, new ModelTexture(loader.loadTexture("real_white")));
