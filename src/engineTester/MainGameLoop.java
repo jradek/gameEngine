@@ -120,6 +120,9 @@ public class MainGameLoop {
         
         RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
         TexturedModel treeModel = new TexturedModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")));
+        
+        RawModel rawPolyTreeModel = OBJLoader.loadObjModel("lowPolyTree", loader);
+        TexturedModel polyTreeModel = new TexturedModel(rawPolyTreeModel, new ModelTexture(loader.loadTexture("lowPolyTree")));
 
         RawModel rawGrassModel = OBJLoader.loadObjModel("grassModel", loader);
         TexturedModel grassModel = new TexturedModel(rawGrassModel, new ModelTexture(loader.loadTexture("grassTexture")));
@@ -129,48 +132,11 @@ public class MainGameLoop {
         RawModel rawFernModel = OBJLoader.loadObjModel("fern", loader);
         TexturedModel fernModel = new TexturedModel(rawFernModel, new ModelTexture(loader.loadTexture("fern")));
         fernModel.getTexture().setHasTransparency(true);
-        
+
         TexturedModel flowerModel = new TexturedModel(rawGrassModel, new ModelTexture(loader.loadTexture("flower")));
         flowerModel.getTexture().setHasTransparency(true);
         flowerModel.getTexture().setUseFakeLighting(true);
 
-        ModelData dragonData = OBJFileLoader.loadOBJ("dragon");
-        RawModel rawDragonModel = loader.loadToVAO(dragonData.getVertices(), dragonData.getTextureCoords(),
-                dragonData.getNormals(), dragonData.getIndices());
-        TexturedModel dragonModel = new TexturedModel(rawDragonModel, new ModelTexture(loader.loadTexture("white")));
-        dragonModel.getTexture().setReflectivity(1);
-        dragonModel.getTexture().setShineDamper(8);
-
-        Entity dragon = new Entity(dragonModel, new Vector3f(300, 0, -400), 0, 0, 0, 3);
-
-        // build scene
-        List<Entity> entities = new ArrayList<Entity>();
-        Random random = new Random();
-        for (int i = 0; i < 500; ++i) {
-            float x = random.nextFloat() * 800;
-            float z = random.nextFloat() * -800;
-            entities.add(new Entity(treeModel, new Vector3f(x, 0, z), 0, 0, 0, 3));
-
-            x = random.nextFloat() * 600 + 50;
-            z = random.nextFloat() * -600 -50;
-            entities.add(new Entity(grassModel, new Vector3f(x, 0, z), 0, 0, 0, 1));
-
-            x = random.nextFloat() * 800;
-            z = random.nextFloat() * -800;
-            entities.add(new Entity(fernModel, new Vector3f(x, 0, z), 0, 0, 0, 0.6f));
-            
-            x = random.nextFloat() * 800;
-            z = random.nextFloat() * -800;
-            entities.add(new Entity(flowerModel, new Vector3f(x, 0, z), 0, 0, 0, 0.6f));
-        }
-
-        entities.add(dragon);
-
-        Vector3f lightPos = new Vector3f(400,200,-400);
-        float dy = 0.4f;
-        Light light = new Light(lightPos, new Vector3f(1,1,1));
-        
-        
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
@@ -180,6 +146,55 @@ public class MainGameLoop {
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
         Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
+
+
+        // build scene
+        List<Entity> entities = new ArrayList<Entity>();
+        Random random = new Random();
+        for (int i = 0; i < 400; ++i) {
+            if (i % 10 == 0) {
+                float x = random.nextFloat() * 800;
+                float z = random.nextFloat() * -800;
+                float y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(fernModel, new Vector3f(x, y, z), 0, 0, 0, 0.6f));
+            }
+            
+            if (i % 3 == 0) {
+                float x = random.nextFloat() * 800;
+                float z = random.nextFloat() * -800;
+                float y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(grassModel, new Vector3f(x, y, z), 0, 0, 0, 1));
+
+                x = random.nextFloat() * 800;
+                z = random.nextFloat() * -800;
+                y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(treeModel, new Vector3f(x, y, z), 0, 0, 0, 3f));
+            
+                x = random.nextFloat() * 800;
+                z = random.nextFloat() * -800;
+                y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(flowerModel, new Vector3f(x, y, z), 0, 0, 0, 0.6f));
+                
+                x = random.nextFloat() * 800;
+                z = random.nextFloat() * -800;
+                y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(polyTreeModel, new Vector3f(x, y, z), 0, 0, 0, 0.5f));
+            }
+        }
+
+
+        Vector3f lightPos = new Vector3f(400,200,-400);
+        float dy = 0.4f;
+        Light light = new Light(lightPos, new Vector3f(1,1,1));
+        
+        ModelData dragonData = OBJFileLoader.loadOBJ("dragon");
+        RawModel rawDragonModel = loader.loadToVAO(dragonData.getVertices(), dragonData.getTextureCoords(),
+                dragonData.getNormals(), dragonData.getIndices());
+        TexturedModel dragonModel = new TexturedModel(rawDragonModel, new ModelTexture(loader.loadTexture("white")));
+        dragonModel.getTexture().setReflectivity(1);
+        dragonModel.getTexture().setShineDamper(8);
+        Entity dragon = new Entity(dragonModel, new Vector3f(300, 0, -400), 0, 0, 0, 3);
+        entities.add(dragon);
         
         RawModel rawBunnyModel = OBJLoader.loadObjModel("bunny", loader);
         TexturedModel bunnyModel = new TexturedModel(rawBunnyModel, new ModelTexture(loader.loadTexture("real_white")));
@@ -193,7 +208,7 @@ public class MainGameLoop {
         MasterRenderer renderer = new MasterRenderer();
         while (!Display.isCloseRequested()) {
             camera.move();
-            player.move();
+            player.move(terrain);
             
             if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
                 renderer.setFog(true);
